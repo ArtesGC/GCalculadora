@@ -1,0 +1,4 @@
+QWidget, QFrame{
+  background-color: #A00;
+  color: black;
+}
