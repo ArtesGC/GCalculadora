@@ -11,8 +11,9 @@ from math import *
 from tkinter import *
 from time import sleep
 from tkinter.messagebox import *
-from tkinter.scrolledlist import ScrolledList
+# from tkinter.scrolledlist import ScrolledList
 from tkinter.ttk import Notebook, Progressbar
+from tkinter.scrolledtext import ScrolledText
 
 
 class C8GC:
@@ -93,7 +94,7 @@ Versão: 0.5-012021
 Designer e Programador: Nurul GC
 Empresa: ArtesGC Inc.''')
 
-    def instr(self):
+    """def instr(self):
         adicao = '<v1+v2> - Adição, retorna o resultado da operação (n1 + n2)'
         subtracao = '<v1-v2> - Subtração, retorna o resultado da operação (n1 - n2)'
         multiplicacao = '<v1*v2> - Multiplicação, retorna o resultado da operação (n1 x n2)'
@@ -137,7 +138,7 @@ Empresa: ArtesGC Inc.''')
             lst.insert(END, lista)
             lst.insert(END, '-----------------------------------------------------------------------------------------------------------')
 
-        Button(self.janela, text='Fechar', command=self.janela.destroy, bg='red').pack(side='right')
+        Button(self.janela, text='Fechar', command=self.janela.destroy, bg='red').pack(side='right')"""
 
     def instr_(self):
         if self.janela is None:
@@ -280,7 +281,7 @@ Empresa: ArtesGC Inc.''')
                  'Obrigado Pelo Apoio (^_~)',
                  '© 2019-2021 Nurul-GC',
                  '™ ArtesGC']
-        lista_intro = ScrolledList(tab_abertura, width=70, height=20, bg='wheat')
+        lista_intro = ScrolledText(tab_abertura, width=70, height=20, bg='wheat')
         for i in intro:
             lista_intro.insert(END, i)
         lista_intro.pack()
