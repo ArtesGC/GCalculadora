@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Advent Pro
+- Font Author: Copyright (c) 2008 Andreas Kalpakidis (hello@inderesting.com), with Reserved Font Name "Advent Pro"
+- Font Source: http://fonts.gstatic.com/s/adventpro/v11/V8mAoQfxVT4Dvddr_yOwtT2nKb5ZFtI.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL)
