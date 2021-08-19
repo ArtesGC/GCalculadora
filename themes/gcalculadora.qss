@@ -1,4 +1,5 @@
 QWidget, QFrame{
+  font-family: "AdventPro";
   background-color: #A00;
   color: black;
 }
