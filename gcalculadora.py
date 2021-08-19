@@ -21,6 +21,8 @@ class GCal:
         self.ferramentas = QWidget()
         self.ferramentas.setStyleSheet(tema)
         self.ferramentas.setFixedSize(600, 670)
+        self.ferramentas.setWindowTitle('GCalculadora')
+        self.ferramentas.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
 
         self.tab = QTabWidget(self.ferramentas)
         self.tab.setGeometry(0, 30, 600, 640)
@@ -29,9 +31,10 @@ class GCal:
 
     def janelaPrincipal(self):
         def iniciar():
-            for valor in range(0, 101):
+            for valor in range(0, 101, 5):
                 progBar.setValue(valor)
                 sleep(0.3)
+            self.tab.removeTab(self.tab.currentIndex())
             self.janelaOperacional()
 
         frame = QFrame()
@@ -43,7 +46,7 @@ class GCal:
         layout.addRow(labelInfo)
 
         labelImagem = QLabel()
-        labelImagem.setPixmap(QPixmap('img/2.png'))
+        labelImagem.setPixmap(QPixmap('img/1.png'))
         labelImagem.setAlignment(Qt.AlignCenter)
         layout.addRow(labelImagem)
 
@@ -59,7 +62,15 @@ class GCal:
         self.tab.setCurrentWidget(frame)
 
     def janelaOperacional(self):
-        QMessageBox.information(self.ferramentas, 'Sucesso', 'Bem Vindo..')
+        frame = QFrame()
+        layout = QVBoxLayout()
+        layout.setSpacing(10)
+
+        valor1 = QLineEdit()
+        layout.addWidget(valor1)
+
+        valor2 = QLineEdit()
+        layout.addWidget(valor2)
 
 
 if __name__ == '__main__':
