@@ -6,11 +6,11 @@ QWidget, QFrame{
 QLineEdit{
   border-style: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: black;
   border-radius: 3px;
   padding: 5px;
   color: black;
-  background-color: #A00;
+  background-color: white;
 }
 QPushButton{
   border-style: solid;
@@ -36,11 +36,19 @@ QProgressBar{
   border-width: 1px;
   border-color: white;
   border-radius: 3px;
-  padding: 1px;
+  padding: 2px;
   color: white;
   background-color: #A00;
 }
 QProgressBar::chunk{
   background-color: black;
   border-radius: 3px;
+}
+QMenuBar::item:selected {
+  background-color: white;
+  color: black;
+}
+QMenu::item:selected{
+  color: black;
+  background-color: white;
 }
