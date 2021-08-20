@@ -1,11 +1,13 @@
 ﻿"""
 (c) 2019-2021 Nurul-GC
 """
+
 import os
 from sys import argv, exit
 from time import sleep
 
 from PyQt5.Qt import *
+
 from gcoperacoes import Operacoes
 
 
@@ -24,10 +26,27 @@ class GCal:
         self.ferramentas.setWindowTitle('GCalculadora')
         self.ferramentas.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
 
+        menu = QMenuBar(self.ferramentas)
+        opcoes = menu.addMenu('Opcoes')
+        instrucoes = opcoes.addAction(QIcon('img/icons/info.png'), 'Instrucoes')
+        instrucoes.triggered.connect(self._instrucoes)
+        opcoes.addSeparator()
+        sair = opcoes.addAction(QIcon('img/icons/exit.png'), 'Sair')
+        sair.triggered.connect(self._sair)
+        sobre = menu.addAction('Sobre')
+
         self.tab = QTabWidget(self.ferramentas)
         self.tab.setGeometry(0, 30, 600, 640)
+        self.tab.setTabBarAutoHide(True)
+        self.tab.setDocumentMode(True)
 
         self.janelaPrincipal()
+
+    def _sair(self):
+        return exit(0)
+
+    def _instrucoes(self):
+        pass
 
     def janelaPrincipal(self):
         def iniciar():
@@ -41,7 +60,7 @@ class GCal:
         layout = QFormLayout()
         layout.setSpacing(10)
 
-        labelInfo = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Completa da Atualidade</i></h2>')
+        labelInfo = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Prática da Atualidade</i></h2>')
         labelInfo.setAlignment(Qt.AlignCenter)
         layout.addRow(labelInfo)
 
@@ -63,14 +82,28 @@ class GCal:
 
     def janelaOperacional(self):
         frame = QFrame()
-        layout = QVBoxLayout()
+        layout = QFormLayout()
         layout.setSpacing(10)
 
+        layoutValores = QHBoxLayout()
         valor1 = QLineEdit()
-        layout.addWidget(valor1)
-
+        valor1.setPlaceholderText('Digite o primeiro valor..')
+        layoutValores.addWidget(valor1)
         valor2 = QLineEdit()
-        layout.addWidget(valor2)
+        valor2.setPlaceholderText('Digite o segundo valor..')
+        layoutValores.addWidget(valor2)
+        layout.addRow(layoutValores)
+
+        resultado = QLineEdit()
+        resultado.setReadOnly(True)
+        resultado.setPlaceholderText('O resultado da operacao surgira aqui..')
+        layout.addRow(resultado)
+
+        layoutBtn = QGridLayout()
+
+        frame.setLayout(layout)
+        self.tab.addTab(frame, 'Operacoes')
+        self.tab.setCurrentWidget(frame)
 
 
 if __name__ == '__main__':
