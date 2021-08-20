@@ -12,7 +12,7 @@ De Forma Resumida E Sem Muitos Detalhes, Basta Introduzir:
 Ela Também Te Permite Efetuar
 Operações Singulares (com Apenas Um Dos Valores)..
 
-Na Barra De Menu (ajuda) Lhe É Disponibilizado
+Na Barra De Menu (opções) Lhe É Disponibilizado
 As Instruções Para Que Possa Conhecer Melhor
 Os Comandos E Funções Da GCalculadora
 ```
