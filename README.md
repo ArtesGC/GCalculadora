@@ -1,20 +1,20 @@
-﻿# BEM - VINDO A CALCULADORA-GC
+﻿# Bem-vindo a GCalculadora
 
-## A CALCULADORA MAIS SIMPLES E PRÁTICA DO MUNDO
+**A CALCULADORA MAIS SIMPLES E PRÁTICA DA ATUALIDADE**
 
 ```
-ELA TE PERMITE FAZER CÁLCULOS DOS MAIS COMPLEXOS AOS MAIS SIMPLES
-DE FORMA RESUMIDA E SEM MUITOS DETALHES, BASTA INTRODUZIR:
-- O [PRIMEIRO VALOR] E O [SEGUNDO VALOR]
-- PRESSIONAR O BOTÃO DA OPERAÇÃO DESEJADA,
-- E O [RESULTADO] SURGIRÁ.. COMO QUE POR MAGIA!
+Ela Te Permite Fazer Cálculos Dos Mais Complexos Aos Mais Simples
+De Forma Resumida E Sem Muitos Detalhes, Basta Introduzir:
+- O [primeiro valor] E O [segundo valor]
+- Pressionar O Botão Da Operação Desejada
+- E O [resultado] Surgirá.. Como Que Por Magia!
 
-ELA TAMBÉM TE PERMITE EFETUAR
-OPERAÇÕES SINGULARES (COM APENAS UM DOS VALORES)..
+Ela Também Te Permite Efetuar
+Operações Singulares (com Apenas Um Dos Valores)..
 
-NA BARRA DE MENU (AJUDA) LHE É DISPONIBILIZADO
-AS INSTRUÇÕES PARA QUE POSSA CONHECER MELHOR
-OS COMANDOS E FUNÇÕES DA GCALCULADORA
+Na Barra De Menu (ajuda) Lhe É Disponibilizado
+As Instruções Para Que Possa Conhecer Melhor
+Os Comandos E Funções Da GCalculadora
 ```
 
 ---
