@@ -10,24 +10,27 @@ class Operacoes:
         self.valor2 = 0
 
     def soma(self):
-        if (self.valor1 and self.valor2) == 0:
+        if self.valor1 == 0 and self.valor2 == 0:
             return None
         return self.valor1+self.valor2
 
     def subtracao(self):
-        if (self.valor1 and self.valor2) == 0:
+        if self.valor1 == 0 and self.valor2 == 0:
             return None
         return self.valor1-self.valor2
 
     def multiplicacao(self):
-        if (self.valor1 and self.valor2) == 0:
+        if self.valor1 == 0 and self.valor2 == 0:
             return None
         return self.valor1*self.valor2
 
     def divisao(self):
-        if (self.valor1 and self.valor2) == 0:
+        if self.valor1 == 0 and self.valor2 == 0:
             return None
-        return self.valor1/self.valor2
+        try:
+            return self.valor1/self.valor2
+        except ZeroDivisionError:
+            return None
 
     def expoente(self):
         if self.valor1 == 0:
@@ -64,6 +67,16 @@ class Operacoes:
             return None
         return fmod(self.valor1, self.valor2)
 
+    def logaritmo(self, _base):
+        if self.valor1 == 0:
+            return log(self.valor2, _base)
+        elif self.valor2 == 0:
+            return log(self.valor1, _base)
+        elif (self.valor1 and self.valor2) == 0:
+            return None
+        else:
+            return log(self.soma(), _base)
+
     def logaritmo2(self):
         if self.valor1 == 0:
             return log2(self.valor2)
@@ -94,16 +107,6 @@ class Operacoes:
         else:
             return log1p(self.soma())
 
-    def logaritmo(self, _base):
-        if self.valor1 == 0:
-            return log(self.valor2, _base)
-        elif self.valor2 == 0:
-            return log2(self.valor1, _base)
-        elif (self.valor1 and self.valor2) == 0:
-            return None
-        else:
-            return log2(self.soma(), _base)
-
     def seno(self):
         if self.valor1 == 0:
             return sin(self.valor2)
@@ -114,16 +117,6 @@ class Operacoes:
         else:
             return sin(self.soma())
 
-    def arcSeno(self):
-        if self.valor1 == 0:
-            return asin(self.valor2)
-        elif self.valor2 == 0:
-            return asin(self.valor1)
-        elif (self.valor1 and self.valor2) == 0:
-            return None
-        else:
-            return asin(self.soma())
-
     def coseno(self):
         if self.valor1 == 0:
             return cos(self.valor2)
@@ -133,16 +126,6 @@ class Operacoes:
             return None
         else:
             return cos(self.soma())
-
-    def arCoseno(self):
-        if self.valor1 == 0:
-            return acos(self.valor2)
-        elif self.valor2 == 0:
-            return acos(self.valor1)
-        elif (self.valor1 and self.valor2) == 0:
-            return None
-        else:
-            return acos(self.soma())
 
     def tangente(self):
         if self.valor1 == 0:
