@@ -1,5 +1,5 @@
 `Janela Principal` \
-![janela-principal](demos/gcalculadora-default.png)
+![janela-principal](demos/1.png)
 
 ---
 
