@@ -1,10 +1,10 @@
 `Janela Principal` \
 ![janela-principal](demos/1.png)
 
-`Janela Operacoes`
+`Janela Operações` \
 ![janela-operacoes](demos/2.png)
 
-`Instrucoes`
+`Instruções` \
 ![instrucoes](demos/3.png)
 
 ---
