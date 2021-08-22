@@ -35,8 +35,8 @@ QPushButton:hover{
   font-weight: bold;
   text-decoration: underline;
   padding: 10px;
-  color: white;
-  background-color: black;
+  color: black;
+  background-color: white;
 }
 QProgressBar{
   text-align: center;
@@ -45,11 +45,11 @@ QProgressBar{
   border-color: white;
   border-radius: 3px;
   padding: 6px;
-  color: white;
+  color: black;
   background-color: #A00;
 }
 QProgressBar::chunk{
-  background-color: black;
+  background-color: white;
   border-radius: 3px;
   padding: 6px;
 }
