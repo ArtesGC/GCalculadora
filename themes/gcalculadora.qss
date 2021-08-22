@@ -1,7 +1,7 @@
 QWidget, QFrame{
   font-family: "AdventPro";
   background-color: #A00;
-  color: black;
+  color: white;
 }
 QLabel{
   color: white;
@@ -24,7 +24,7 @@ QPushButton{
   border-radius: 3px;
   font-weight: bold;
   padding: 10px;
-  color: black;
+  color: white;
   background-color: #A00;
 }
 QPushButton:hover{
