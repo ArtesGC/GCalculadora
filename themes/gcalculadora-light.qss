@@ -1,0 +1,63 @@
+QWidget, QFrame{
+  font-family: "AdventPro";
+  background-color: #DDBABA;
+  color: black;
+}
+QLabel{
+  color: black;
+}
+QLineEdit{
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 3px;
+  font-size: 14pt;
+  font-weight: bold;
+  padding: 5px;
+  color: black;
+  background-color: white;
+}
+QPushButton{
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 3px;
+  font-weight: bold;
+  padding: 10px;
+  color: black;
+  background-color: #DDBABA;
+}
+QPushButton:hover{
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 3px;
+  font-weight: bold;
+  text-decoration: underline;
+  padding: 10px;
+  color: black;
+  background-color: white;
+}
+QProgressBar{
+  text-align: center;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 3px;
+  padding: 6px;
+  color: black;
+  background-color: #DDBABA;
+}
+QProgressBar::chunk{
+  background-color: white;
+  border-radius: 3px;
+  padding: 6px;
+}
+QMenuBar::item:selected {
+  background-color: white;
+  color: black;
+}
+QMenu::item:selected{
+  background-color: white;
+  color: black;
+}
