@@ -35,7 +35,7 @@ LicenseFile=.\LICENSE
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=.\dist\
-OutputBaseFilename=GCalculadora_{#MyAppVersion}_amd64
+OutputBaseFilename=GCalculadora_{#MyAppVersion}-082021_amd64
 SetupIconFile=.\img\favicons\favicon.ico
 Compression=lzma
 SolidCompression=yes
