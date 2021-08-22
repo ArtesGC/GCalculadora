@@ -2,6 +2,7 @@
 (c) 2019-2021 Nurul-GC
 """
 
+from configparser import ConfigParser
 import os
 import webbrowser
 from sys import argv, exit
@@ -29,6 +30,8 @@ class GCal:
 
         menu = QMenuBar(self.ferramentas)
         opcoes = menu.addMenu('Opções')
+        alterartema = opcoes.addAction(QIcon('img/icons/paint.png'), 'Alterar Tema')
+        alterartema.triggered.connect(self.alterarTema)
         instrucoes = opcoes.addAction(QIcon('img/icons/info.png'), 'Instruções')
         instrucoes.triggered.connect(self._instrucoes)
         opcoes.addSeparator()
@@ -40,10 +43,45 @@ class GCal:
 
         self.tab = QTabWidget(self.ferramentas)
         self.tab.setGeometry(0, 30, 600, 640)
-        # self.tab.setTabBarAutoHide(True)
         self.tab.setDocumentMode(True)
 
         self.janelaPrincipal()
+
+    def alterarTema(self):
+        def alterar():
+            try:
+                config = ConfigParser()
+                if escolhaTema.currentText() == 'Escuro':
+                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/1.png'}
+                elif escolhaTema.currentText() == 'Claro':
+                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/2.png'}
+                with open('gcalculadora.ini', 'w') as INIFILE:
+                    config.write(INIFILE)
+                QMessageBox.information(self.ferramentas, 'Sucessso', 'O tema definido sera aplicado após o reinicio do programa!')
+                janela.close()
+            except Exception as erro:
+                QMessageBox.warning(self.ferramentas, 'Aviso', f'Durante o processamento do pedido o seguinte erro foi encontrado:\n- {erro}')
+
+        janela = QDialog(self.ferramentas)
+        janela.setWindowTitle('GCalculadora')
+        janela.setFixedSize(QSize(300, 150))
+        janela.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
+        layout = QVBoxLayout()
+
+        labelInfo = QLabel('<h3>Escolha o tema para o programa:</h3>')
+        layout.addWidget(labelInfo)
+
+        temas = ['Claro', 'Escuro']
+        escolhaTema = QComboBox()
+        escolhaTema.addItems(temas)
+        layout.addWidget(escolhaTema)
+
+        btnSalvar = QPushButton('Salvar')
+        btnSalvar.clicked.connect(alterar)
+        layout.addWidget(btnSalvar)
+
+        janela.setLayout(layout)
+        janela.show()
 
     def _sair(self):
         return exit(0)
@@ -94,7 +132,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
         layout.addRow(labelInfo)
 
         labelImagem = QLabel()
-        labelImagem.setPixmap(QPixmap('img/1.png'))
+        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])))
         labelImagem.setAlignment(Qt.AlignCenter)
         layout.addRow(labelImagem)
 
@@ -192,6 +230,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
 
             janela = QDialog(self.ferramentas)
             janela.setWindowTitle('GCalculadora')
+            janela.setFixedSize(QSize(300, 150))
             janela.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
             layoutJ = QVBoxLayout()
 
@@ -201,8 +240,11 @@ Empresa: <b>ArtesGC Inc.</b></p>
             valores = ['1', '3', '4', '5', '6', '7', '8', '9']
             valorBase = QComboBox()
             valorBase.addItems(valores)
-            valorBase.currentTextChanged.connect(calcular)
             layoutJ.addWidget(valorBase)
+
+            btnSalvar = QPushButton('Salvar')
+            btnSalvar.clicked.connect(calcular)
+            layout.addWidget(btnSalvar)
 
             janela.setLayout(layoutJ)
             janela.show()
@@ -384,7 +426,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
         layout.addRow(QLabel('<hr>'))
 
         link = lambda: webbrowser.open('https://artesgc.home.blog')
-        labelTrade = QLabel('<b><a href="#" style="color:white; text-decoration:none;">&trade;ArtesGC Inc</a></b>')
+        labelTrade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
         labelTrade.setAlignment(Qt.AlignRight)
         labelTrade.linkActivated.connect(link)
         labelTrade.setToolTip('Abrir website oficial da ArtesGC!')
@@ -396,7 +438,15 @@ Empresa: <b>ArtesGC Inc.</b></p>
 
 
 if __name__ == '__main__':
-    tema = open('themes/gcalculadora.qss').read().strip()
+    if os.path.exists('gcalculadora.ini'):
+        inifile = ConfigParser()
+        inifile.read('gcalculadora.ini')
+        if inifile['MAIN']['tema'] == 'Escuro':
+            tema = open('themes/gcalculadora.qss').read().strip()
+        else:
+            tema = open('themes/gcalculadora-light.qss').read().strip()
+    else:
+        tema = open('themes/gcalculadora-light.qss').read().strip()
     fonte = [f'fonts/{fontFile}' for fontFile in os.listdir('fonts') if fontFile.endswith('.ttf')]
 
     app = GCal()
