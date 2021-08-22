@@ -1,4 +1,8 @@
-﻿# Bem-vindo a GCalculadora
+[![Download GCalculadora](https://img.shields.io/sourceforge/dt/gcalculadora.svg)](https://sourceforge.net/projects/gcalculadora/files/latest/download) 
+
+[![Download GCalculadora](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/gcalculadora/files/latest/download)
+
+# Bem-vindo a GCalculadora
 
 **A CALCULADORA MAIS SIMPLES E PRÁTICA DA ATUALIDADE**
 
