@@ -2,11 +2,13 @@
 
 [![Download GCalculadora](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/gcalculadora/files/latest/download)
 
-# Bem-vindo a GCalculadora
+# Olaa Seja muito Bem-vindo a..
+
+![gcalculadora-icon](img/favicons/favicon-192x192.png)
 
 **A CALCULADORA MAIS SIMPLES E PRÁTICA DA ATUALIDADE**
 
-```
+```txt
 Ela Te Permite Fazer Cálculos Dos Mais Complexos Aos Mais Simples
 De Forma Resumida E Sem Muitos Detalhes, Basta Introduzir:
 - O [primeiro valor] E O [segundo valor]
