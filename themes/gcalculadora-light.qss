@@ -54,6 +54,7 @@ QProgressBar::chunk{
   padding: 6px;
 }
 QMenuBar::item:selected {
+  border-radius: 3px;
   background-color: white;
   color: black;
 }
