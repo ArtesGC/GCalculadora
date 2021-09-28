@@ -4,7 +4,7 @@ QWidget, QFrame{
   color: white;
 }
 QLabel{
-  color: white;
+  color: black;
 }
 QLineEdit{
   border-style: solid;
@@ -54,10 +54,14 @@ QProgressBar::chunk{
   padding: 6px;
 }
 QMenuBar::item:selected {
+  border-radius: 3px;
   background-color: white;
   color: black;
 }
 QMenu::item:selected{
   color: black;
   background-color: white;
+}
+QTabBar{
+  color: black;
 }
