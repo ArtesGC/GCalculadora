@@ -1,10 +1,10 @@
-[![Download GCalculadora](https://img.shields.io/sourceforge/dt/gcalculadora.svg)](https://sourceforge.net/projects/gcalculadora/files/latest/download) 
+<div align="center">
 
-[![Download GCalculadora](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/gcalculadora/files/latest/download)
+![gcalculadora-icon](gcal/img/favicons/favicon-192x192.png) \
+[![Download GCalculadora](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/gcalculadora/files/latest/download) \
+![Download GCalculadora](https://img.shields.io/sourceforge/dt/gcalculadora.svg)
 
-# Olaa Seja muito Bem-vindo a..
-
-![gcalculadora-icon](img/favicons/favicon-192x192.png)
+</div>
 
 **A CALCULADORA MAIS SIMPLES E PRÁTICA DA ATUALIDADE**
 
@@ -27,5 +27,5 @@ Os Comandos E Funções Da GCalculadora
 
 **Obrigado Pelo Apoio (^_~)**
 
-&copy; 2019-2021 [Nurul-GC](mailto:nuruldecarvalho@gmail.com) \
-&trade; [ArtesGC](https://artesgc.home.blog)
+&copy; 2019-2022 [Nurul-GC](mailto:nuruldecarvalho@gmail.com) \
+&trade;[ArtesGC-DevSoft](https://artesgc.home.blog)
