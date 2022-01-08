@@ -1,30 +1,21 @@
-﻿"""
-(c) 2019-2021 Nurul-GC
-"""
-
-from configparser import ConfigParser
-import os
 import webbrowser
+from configparser import ConfigParser
 from sys import argv, exit
 from time import sleep
 
-from PyQt5.Qt import *
+from PyQt6.QtWidgets import *
+from PyQt6.QtGui import *
+from PyQt6.QtCore import *
 
 from gcoperacoes import Operacoes
 
 
 class GCal:
     def __init__(self):
-        self.gc = QApplication(argv)
         self.gcOperacoes = Operacoes()
 
-        self.fonte = QFontDatabase()
-        for fontfile in fonte:
-            self.fonte.addApplicationFont(fontfile)
-
         self.ferramentas = QWidget()
-        self.ferramentas.setStyleSheet(tema)
-        self.ferramentas.setFixedSize(600, 670)
+        self.ferramentas.setFixedSize(600, 600)
         self.ferramentas.setWindowTitle('GCalculadora')
         self.ferramentas.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
 
@@ -42,10 +33,53 @@ class GCal:
         sobre.triggered.connect(self._sobre)
 
         self.tab = QTabWidget(self.ferramentas)
-        self.tab.setGeometry(0, 30, 600, 640)
+        self.tab.setGeometry(0, 30, 600, 580)
         self.tab.setDocumentMode(True)
 
-        self.janelaPrincipal()
+        frame = QFrame()
+        layout = QFormLayout()
+        layout.setSpacing(10)
+
+        labelInfo = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Prática da Atualidade</i></h2>')
+        labelInfo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addRow(labelInfo)
+
+        inifile = ConfigParser()
+        inifile.read('gcalculadora.ini')
+
+        labelImagem = QLabel()
+        labelImagem.setStyleSheet("border-width:1px;"
+                                  "border-style:solid;"
+                                  "border-color:white;")
+        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])))
+        labelImagem.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addRow(labelImagem)
+
+        progBar = QProgressBar()
+        progBar.setMaximum(100)
+        progBar.setOrientation(Qt.Orientation.Horizontal)
+
+        def iniciar():
+            for valor in range(0, 101, 5):
+                progBar.setValue(valor)
+                sleep(0.3)
+            self.tab.removeTab(self.tab.currentIndex())
+            self.janelaOperacional()
+
+        iniciarBtn = QPushButton('Iniciar')
+        iniciarBtn.clicked.connect(iniciar)
+        layout.addRow(iniciarBtn, progBar)
+
+        link = lambda: webbrowser.open('https://artesgc.home.blog')
+        labelTrade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
+        labelTrade.setAlignment(Qt.AlignmentFlag.AlignRight)
+        labelTrade.linkActivated.connect(link)
+        labelTrade.setToolTip('Abrir website oficial da ArtesGC!')
+        layout.addWidget(labelTrade)
+
+        frame.setLayout(layout)
+        self.tab.addTab(frame, 'Principal')
+        self.tab.setCurrentWidget(frame)
 
     def alterarTema(self):
         def alterar():
@@ -58,33 +92,30 @@ class GCal:
                 with open('gcalculadora.ini', 'w') as INIFILE:
                     config.write(INIFILE)
                 QMessageBox.information(self.ferramentas, 'Sucessso', 'O tema definido sera aplicado após o reinicio do programa!')
-                janela.close()
+                janelaConfiguracoes.close()
             except Exception as erro:
                 QMessageBox.warning(self.ferramentas, 'Aviso', f'Durante o processamento do pedido o seguinte erro foi encontrado:\n- {erro}')
 
-        janela = QDialog(self.ferramentas)
-        janela.setWindowTitle('GCalculadora')
-        janela.setFixedSize(QSize(300, 150))
-        janela.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
-        layout = QVBoxLayout()
+        janelaConfiguracoes = QDialog(self.ferramentas)
+        janelaConfiguracoes.setWindowTitle('GCalculadora - Tema')
+        janelaConfiguracoes.setFixedSize(QSize(300, 150))
+        janelaConfiguracoes.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
+        layoutConfiguracoes = QVBoxLayout()
 
         labelInfo = QLabel('<h3>Escolha o tema para o programa:</h3>')
-        layout.addWidget(labelInfo)
+        layoutConfiguracoes.addWidget(labelInfo)
 
         temas = ['Claro', 'Escuro']
         escolhaTema = QComboBox()
         escolhaTema.addItems(temas)
-        layout.addWidget(escolhaTema)
+        layoutConfiguracoes.addWidget(escolhaTema)
 
         btnSalvar = QPushButton('Salvar')
         btnSalvar.clicked.connect(alterar)
-        layout.addWidget(btnSalvar)
+        layoutConfiguracoes.addWidget(btnSalvar)
 
-        janela.setLayout(layout)
-        janela.show()
-
-    def _sair(self):
-        return exit(0)
+        janelaConfiguracoes.setLayout(layoutConfiguracoes)
+        janelaConfiguracoes.show()
 
     def _instrucoes(self):
         QMessageBox.information(self.ferramentas, 'Instruções', '''
@@ -105,6 +136,9 @@ Basta deixar o outro valor com 0..</p>
 <b>&trade;ArtesGC Inc</b></p>
 ''')
 
+    def _sair(self):
+        return exit(0)
+
     def _sobre(self):
         QMessageBox.information(self.ferramentas, 'Sobre o Programa', '''
 <h2>Informações Sobre o Programa</h2>
@@ -115,43 +149,11 @@ Designer e Programador: <b>Nurul-GC</b><br>
 Empresa: <b>ArtesGC Inc.</b></p>
 ''')
 
-    def janelaPrincipal(self):
-        def iniciar():
-            for valor in range(0, 101, 5):
-                progBar.setValue(valor)
-                sleep(0.3)
-            self.tab.removeTab(self.tab.currentIndex())
-            self.janelaOperacional()
-
-        frame = QFrame()
-        layout = QFormLayout()
-        layout.setSpacing(10)
-
-        labelInfo = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Prática da Atualidade</i></h2>')
-        labelInfo.setAlignment(Qt.AlignCenter)
-        layout.addRow(labelInfo)
-
-        labelImagem = QLabel()
-        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])))
-        labelImagem.setAlignment(Qt.AlignCenter)
-        layout.addRow(labelImagem)
-
-        progBar = QProgressBar()
-        progBar.setMaximum(100)
-        progBar.setOrientation(Qt.Horizontal)
-        iniciarBtn = QPushButton('Iniciar')
-        iniciarBtn.clicked.connect(iniciar)
-        layout.addRow(iniciarBtn, progBar)
-
-        frame.setLayout(layout)
-        self.tab.addTab(frame, 'Principal')
-        self.tab.setCurrentWidget(frame)
-
     def janelaOperacional(self):
         def apagar():
             valor1.clear()
             valor2.clear()
-            resultado.clear()
+            resultado.clearMask()
 
         def soma():
             if not valor1.text() or not valor2.text():
@@ -159,7 +161,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.soma()))
+                resultado.setNumDigits(int(self.gcOperacoes.soma()))
 
         def subt():
             if not valor1.text() or not valor2.text():
@@ -167,7 +169,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.subtracao()))
+                resultado.setNumDigits(int(self.gcOperacoes.subtracao()))
 
         def mult():
             if not valor1.text() or not valor2.text():
@@ -175,7 +177,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.multiplicacao()))
+                resultado.setNumDigits(int(self.gcOperacoes.multiplicacao()))
 
         def divi():
             if not valor1.text() or not valor2.text():
@@ -183,7 +185,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.divisao()))
+                resultado.setNumDigits(int(self.gcOperacoes.divisao()))
 
         def exp():
             if not valor1.text() or not valor2.text():
@@ -191,7 +193,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.expoente()))
+                resultado.setNumDigits(int(self.gcOperacoes.expoente()))
 
         def expN():
             if not valor1.text() or not valor2.text():
@@ -199,7 +201,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.expoenteNeg()))
+                resultado.setNumDigits(int(self.gcOperacoes.expoenteNeg()))
 
         def razQ():
             if not valor1.text() or not valor2.text():
@@ -207,7 +209,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.raizQuad()))
+                resultado.setNumDigits(int(self.gcOperacoes.raizQuad()))
 
         def mod():
             if not valor1.text() or not valor2.text():
@@ -215,7 +217,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.modulo()))
+                resultado.setNumDigits(int(self.gcOperacoes.modulo()))
 
         def logB():
             def calcular():
@@ -225,13 +227,10 @@ Empresa: <b>ArtesGC Inc.</b></p>
                     self.gcOperacoes.valor1 = int(valor1.text())
                     self.gcOperacoes.valor2 = int(valor2.text())
                     base = int(valorBase.currentText())
-                    resultado.setText(str(self.gcOperacoes.logaritmo(base)))
-                    janela.close()
+                    resultado.setNumDigits(int(self.gcOperacoes.logaritmo(base)))
+                    janelaLog.close()
 
-            janela = QDialog(self.ferramentas)
-            janela.setWindowTitle('GCalculadora')
-            janela.setFixedSize(QSize(300, 150))
-            janela.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
+            janelaLog = QDialog(self.ferramentas)
             layoutJ = QVBoxLayout()
 
             labelInfo = QLabel('<h3>Escolha o Valor da base:</h3>')
@@ -244,10 +243,10 @@ Empresa: <b>ArtesGC Inc.</b></p>
 
             btnSalvar = QPushButton('Salvar')
             btnSalvar.clicked.connect(calcular)
-            layout.addWidget(btnSalvar)
+            layoutOperacoes.addWidget(btnSalvar)
 
-            janela.setLayout(layoutJ)
-            janela.show()
+            janelaLog.setLayout(layoutJ)
+            janelaLog.show()
 
         def log2():
             if not valor1.text() or not valor2.text():
@@ -255,7 +254,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmo2()))
+                resultado.setNumDigits(int(self.gcOperacoes.logaritmo2()))
 
         def log10():
             if not valor1.text() or not valor2.text():
@@ -263,7 +262,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmo10()))
+                resultado.setNumDigits(int(self.gcOperacoes.logaritmo10()))
 
         def logN():
             if not valor1.text() or not valor2.text():
@@ -271,7 +270,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmoNat()))
+                resultado.setNumDigits(int(self.gcOperacoes.logaritmoNat()))
 
         def seno():
             if not valor1.text() or not valor2.text():
@@ -279,7 +278,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.seno()))
+                resultado.setNumDigits(int(self.gcOperacoes.seno()))
 
         def cos():
             if not valor1.text() or not valor2.text():
@@ -287,7 +286,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.coseno()))
+                resultado.setNumDigits(int(self.gcOperacoes.coseno()))
 
         def tan():
             if not valor1.text() or not valor2.text():
@@ -295,7 +294,7 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.tangente()))
+                resultado.setNumDigits(int(self.gcOperacoes.tangente()))
 
         def atan():
             if not valor1.text() or not valor2.text():
@@ -303,33 +302,30 @@ Empresa: <b>ArtesGC Inc.</b></p>
             else:
                 self.gcOperacoes.valor1 = int(valor1.text())
                 self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.arcTangente()))
+                resultado.setNumDigits(int(self.gcOperacoes.arcTangente()))
 
-        frame = QFrame()
-        layout = QFormLayout()
-        layout.setSpacing(20)
+        frameOperacoes = QFrame()
+        layoutOperacoes = QFormLayout()
+        layoutOperacoes.setSpacing(20)
         layoutBtn = QGridLayout()
         layoutValores = QHBoxLayout()
 
         valor1 = QLineEdit()
-        valor1.setAlignment(Qt.AlignCenter)
+        valor1.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor1.setPlaceholderText('Digite o primeiro valor..')
         layoutValores.addWidget(valor1)
 
         valor2 = QLineEdit()
-        valor2.setAlignment(Qt.AlignCenter)
+        valor2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor2.setPlaceholderText('Digite o segundo valor..')
         layoutValores.addWidget(valor2)
-        layout.addRow(layoutValores)
+        layoutOperacoes.addRow(layoutValores)
 
-        resultado = QLineEdit()
-        resultado.setReadOnly(True)
-        resultado.setAlignment(Qt.AlignRight)
-        resultado.setPlaceholderText('O resultado da operação surgirá aqui..')
-        layout.addRow(resultado)
+        resultado = QLCDNumber()
+        layoutOperacoes.addRow(resultado)
 
         # ***** separador *****
-        layout.addRow(QLabel('<hr>'))
+        layoutOperacoes.addRow(QLabel('<hr>'))
 
         # ***** 1 linha *****
         btnSoma = QPushButton('+')
@@ -415,40 +411,16 @@ Empresa: <b>ArtesGC Inc.</b></p>
         btnATan.clicked.connect(atan)
         btnATan.setToolTip('Arco Tangente de V em Radianos')
         layoutBtn.addWidget(btnATan, 5, 2, 1, 2)
-        layout.addRow(layoutBtn)
+        layoutOperacoes.addRow(layoutBtn)
 
         btnClr = QPushButton('C')
         btnClr.clicked.connect(apagar)
         btnClr.setToolTip('Apagar Valores e Resultado')
-        layout.addRow(btnClr)
+        layoutOperacoes.addRow(btnClr)
 
         # ***** separador *****
-        layout.addRow(QLabel('<hr>'))
+        layoutOperacoes.addRow(QLabel('<hr>'))
 
-        link = lambda: webbrowser.open('https://artesgc.home.blog')
-        labelTrade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
-        labelTrade.setAlignment(Qt.AlignRight)
-        labelTrade.linkActivated.connect(link)
-        labelTrade.setToolTip('Abrir website oficial da ArtesGC!')
-        layout.addWidget(labelTrade)
-
-        frame.setLayout(layout)
-        self.tab.addTab(frame, 'Operações')
-        self.tab.setCurrentWidget(frame)
-
-
-if __name__ == '__main__':
-    if os.path.exists('gcalculadora.ini'):
-        inifile = ConfigParser()
-        inifile.read('gcalculadora.ini')
-        if inifile['MAIN']['tema'] == 'Escuro':
-            tema = open('themes/gcalculadora.qss').read().strip()
-        else:
-            tema = open('themes/gcalculadora-light.qss').read().strip()
-    else:
-        tema = open('themes/gcalculadora-light.qss').read().strip()
-    fonte = [f'fonts/{fontFile}' for fontFile in os.listdir('fonts') if fontFile.endswith('.ttf')]
-
-    app = GCal()
-    app.ferramentas.show()
-    app.gc.exec_()
+        frameOperacoes.setLayout(layoutOperacoes)
+        self.tab.addTab(frameOperacoes, 'Operações')
+        self.tab.setCurrentWidget(frameOperacoes)
