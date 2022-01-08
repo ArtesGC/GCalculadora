@@ -4,8 +4,8 @@
 block_cipher = None
 
 
-a = Analysis(['gcalculadora.py'],
-             pathex=['./'],
+a = Analysis(['gcal/__init__.py'],
+             pathex=['./gcal/'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -32,4 +32,4 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=False,
-          icon='img/favicons/favicon.ico' )
+          icon='./gcal/img/favicons/favicon.ico' )
