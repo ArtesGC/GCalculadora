@@ -1,2 +1,2 @@
 future
-PyQt5
+PyQt6
