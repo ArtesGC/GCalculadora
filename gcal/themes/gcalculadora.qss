@@ -1,7 +1,7 @@
-QWidget, QFrame{
+QDialog, QWidget, QFrame{
   font-family: "AdventPro";
-  background-color: #A00;
-  color: white;
+  font-weight: bold;
+  background-color: red /*"#A00"*/;
 }
 QLabel{
   color: black;
@@ -25,7 +25,7 @@ QPushButton{
   font-weight: bold;
   padding: 10px;
   color: white;
-  background-color: #A00;
+  background-color: "#A00";
 }
 QPushButton:hover{
   border-style: solid;
@@ -63,5 +63,6 @@ QMenu::item:selected{
   background-color: white;
 }
 QTabBar{
-  color: black;
+  background-color: "#A00";
+  color: white;
 }
