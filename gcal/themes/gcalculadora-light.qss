@@ -1,7 +1,7 @@
-QWidget, QFrame{
+QDialog, QWidget, QFrame{
   font-family: "AdventPro";
-  background-color: #DDBABA;
-  color: black;
+  font-weight: bold;
+  background-color: "pink" /*#DDBABA*/;
 }
 QLabel{
   color: black;
@@ -60,5 +60,9 @@ QMenuBar::item:selected {
 }
 QMenu::item:selected{
   background-color: white;
+  color: black;
+}
+QTabBar{
+  background-color: #DDBABA;
   color: black;
 }
