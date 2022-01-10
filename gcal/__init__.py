@@ -20,17 +20,14 @@ class Gcal:
     def __init__(self):
         self.gc = QApplication(argv)
 
+        QFontDatabase.addApplicationFont(fonte)
 
-        for fontfile in fonte:
-            QFontDatabase.addApplicationFont(fontfile)
-
-            img = QPixmap("img/favicons/favicon-512x512.png")
-            self.align = int(
-                Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignAbsolute)
-            self.janela = QSplashScreen(img)
-            self.janela.setStyleSheet(tema)
-            self.janela.show()
-            self.iniciar()
+        img = QPixmap("img/favicons/favicon-512x512.png")
+        self.align = int(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignAbsolute)
+        self.janela = QSplashScreen(img)
+        self.janela.setStyleSheet(tema)
+        self.janela.show()
+        self.iniciar()
 
     def iniciar(self):
         load = 0
@@ -39,9 +36,8 @@ class Gcal:
             load += randint(1, 10)
             sleep(0.5)
         self.janela.close()
-        GCal().ferramentas.show()
         GCal().ferramentas.setStyleSheet(tema)
-
+        GCal().ferramentas.show()
 
 
 if __name__ == '__main__':
@@ -57,7 +53,7 @@ if __name__ == '__main__':
         with open('gcalculadora.ini', 'w') as INIFILE:
             inifile.write(INIFILE)
         tema = open('themes/gcalculadora-light.qss').read().strip()
-    fonte = [f'fonts/{fontFile}' for fontFile in os.listdir('fonts') if fontFile.endswith('.ttf')]
+    fonte = "fonts/AdventPro-Bold.ttf"
 
     app = Gcal()
-    app.gc.exec_()
+    app.gc.exec()
