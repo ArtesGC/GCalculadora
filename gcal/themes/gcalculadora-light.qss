@@ -1,7 +1,7 @@
 QDialog, QWidget, QFrame{
   font-family: "AdventPro";
   font-weight: bold;
-  background-color: "pink" /*#DDBABA*/;
+  background-color: "#A00";
 }
 QLabel{
   color: black;
@@ -25,7 +25,7 @@ QPushButton{
   font-weight: bold;
   padding: 10px;
   color: black;
-  background-color: #DDBABA;
+  background-color: "#A00";
 }
 QPushButton:hover{
   border-style: solid;
@@ -33,7 +33,7 @@ QPushButton:hover{
   border-color: black;
   border-radius: 3px;
   font-weight: bold;
-  text-decoration: underline;
+  text-decoration: "underline";
   padding: 10px;
   color: black;
   background-color: white;
@@ -45,8 +45,8 @@ QProgressBar{
   border-color: black;
   border-radius: 3px;
   padding: 6px;
-  color: black;
-  background-color: #DDBABA;
+  color: "#A00";
+  background-color: black;
 }
 QProgressBar::chunk{
   background-color: white;
@@ -63,6 +63,6 @@ QMenu::item:selected{
   color: black;
 }
 QTabBar{
-  background-color: #DDBABA;
+  background-color: "#A00";
   color: black;
 }
