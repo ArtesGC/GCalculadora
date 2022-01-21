@@ -9,6 +9,13 @@ from PyQt6.QtCore import *
 
 from gcoperacoes import Operacoes
 
+inifile = ConfigParser()
+inifile.read('gcalculadora.ini')
+if inifile['MAIN']['tema'] == 'Escuro':
+    tema = open('themes/dark.qss').read().strip()
+else:
+    tema = open('themes/light.qss').read().strip()
+
 
 class GCal:
     def __init__(self):
@@ -17,6 +24,7 @@ class GCal:
         self.ferramentas = QWidget()
         self.ferramentas.setFixedSize(600, 600)
         self.ferramentas.setWindowTitle('GCalculadora')
+        self.ferramentas.setStyleSheet(tema)
         self.ferramentas.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
 
         menu = QMenuBar(self.ferramentas)
@@ -43,9 +51,9 @@ class GCal:
             try:
                 config = ConfigParser()
                 if escolhaTema.currentText() == 'Escuro':
-                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/1.png'}
-                elif escolhaTema.currentText() == 'Claro':
                     config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/2.png'}
+                elif escolhaTema.currentText() == 'Claro':
+                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/1.png'}
                 with open('gcalculadora.ini', 'w') as INIFILE:
                     config.write(INIFILE)
                 QMessageBox.information(self.ferramentas, 'Sucessso', 'O tema definido sera aplicado após o reinicio do programa!')
@@ -115,11 +123,8 @@ Empresa: <b>ArtesGC Inc.</b></p>
         labelInfo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addRow(labelInfo)
 
-        inifile = ConfigParser()
-        inifile.read('gcalculadora.ini')
-
         labelImagem = QLabel()
-        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])).scaled(500, 500))
+        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])).scaled(500, 440))
         labelImagem.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addRow(labelImagem)
 
@@ -298,30 +303,52 @@ Empresa: <b>ArtesGC Inc.</b></p>
                 self.gcOperacoes.valor2 = int(valor2.text())
                 resultado.setText(str(self.gcOperacoes.arcTangente()))
 
+        def selctvalor1():
+            selectvalor1.setChecked(True)
+            valor1.setFocus(Qt.FocusReason.MouseFocusReason)
+
+        def selctvalor2():
+            selectvalor2.setChecked(True)
+            valor2.setFocus(Qt.FocusReason.MouseFocusReason)
+
         frameOperacoes = QFrame()
         layoutOperacoes = QFormLayout()
-        layoutOperacoes.setSpacing(20)
-        layoutBtn = QGridLayout()
+        layoutOperacoes.setSpacing(10)
+
+        layoutBtnOper = QGridLayout()
         layoutValores = QHBoxLayout()
 
+        layoutvalor1 = QFormLayout()
         valor1 = QLineEdit()
         valor1.setValidator(QIntValidator(-2147483648, 2147483647))
-        valor1.setFont(QFont("Courier", 20))
-        valor1.setAlignment(Qt.AlignmentFlag.AlignRight)
+        valor1.setFont(QFont("Courier", 10))
+        valor1.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor1.setPlaceholderText('Digite o 1º valor..')
-        layoutValores.addWidget(valor1)
+        valor1.textEdited.connect(selctvalor1)
 
+        selectvalor1 = QRadioButton()
+        selectvalor1.clicked.connect(selctvalor1)
+        layoutvalor1.addRow(selectvalor1, valor1)
+        layoutValores.addLayout(layoutvalor1)
+
+        layoutvalor2 = QFormLayout()
         valor2 = QLineEdit()
         valor2.setValidator(QIntValidator(-2147483648, 2147483647))
-        valor2.setFont(QFont("Courier", 20))
-        valor2.setAlignment(Qt.AlignmentFlag.AlignRight)
+        valor2.setFont(QFont("Courier", 10))
+        valor2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor2.setPlaceholderText('Digite o 2º valor..')
-        layoutValores.addWidget(valor2)
+        valor2.textEdited.connect(selctvalor2)
+
+        selectvalor2 = QRadioButton()
+        selectvalor2.clicked.connect(selctvalor2)
+        layoutvalor2.addRow(selectvalor2, valor2)
+        layoutValores.addLayout(layoutvalor2)
         layoutOperacoes.addRow(layoutValores)
 
         resultado = QLineEdit()
         resultado.setReadOnly(True)
-        resultado.setFont(QFont("Courier", 25))
+        resultado.setFont(QFont("Courier", 20))
+        resultado.setPlaceholderText('Resultado da operaçao..')
         resultado.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layoutOperacoes.addRow(resultado)
 
@@ -332,89 +359,122 @@ Empresa: <b>ArtesGC Inc.</b></p>
         btnSoma = QPushButton('+')
         btnSoma.clicked.connect(soma)
         btnSoma.setToolTip('Soma')
-        layoutBtn.addWidget(btnSoma, 0, 0)
+        layoutBtnOper.addWidget(btnSoma, 0, 0)
 
         btnSubt = QPushButton('-')
         btnSubt.clicked.connect(subt)
         btnSubt.setToolTip('Subtração')
-        layoutBtn.addWidget(btnSubt, 0, 1)
+        layoutBtnOper.addWidget(btnSubt, 0, 1)
 
         btnMult = QPushButton('x')
         btnMult.clicked.connect(mult)
         btnMult.setToolTip('Multiplicação')
-        layoutBtn.addWidget(btnMult, 0, 2)
+        layoutBtnOper.addWidget(btnMult, 0, 2)
 
         btnDivi = QPushButton('/')
         btnDivi.clicked.connect(divi)
         btnDivi.setToolTip('Divisão')
-        layoutBtn.addWidget(btnDivi, 0, 3)
+        layoutBtnOper.addWidget(btnDivi, 0, 3)
 
-        # ***** 2 linha *****
         btnExp = QPushButton('^')
         btnExp.clicked.connect(exp)
         btnExp.setToolTip('Exponenciação')
-        layoutBtn.addWidget(btnExp, 1, 0)
+        layoutBtnOper.addWidget(btnExp, 0, 4)
 
         btnExpN = QPushButton('^-1')
         btnExpN.clicked.connect(expN)
         btnExpN.setToolTip('Exponenciação Negativa')
-        layoutBtn.addWidget(btnExpN, 1, 1)
+        layoutBtnOper.addWidget(btnExpN, 0, 5)
 
         btnRazQ = QPushButton('√')
         btnRazQ.clicked.connect(razQ)
         btnRazQ.setToolTip('Raiz Quadrada')
-        layoutBtn.addWidget(btnRazQ, 1, 2)
+        layoutBtnOper.addWidget(btnRazQ, 0, 6)
 
         btnMod = QPushButton('%')
         btnMod.clicked.connect(mod)
         btnMod.setToolTip('Môdulo')
-        layoutBtn.addWidget(btnMod, 1, 3)
+        layoutBtnOper.addWidget(btnMod, 0, 7)
 
-        # ***** 3 linha *****
+        # ***** 2 linha *****
         btnLog = QPushButton('logB(v)')
         btnLog.clicked.connect(logB)
-        btnLog.setToolTip('Logaritmo de V na base B')
-        layoutBtn.addWidget(btnLog, 2, 0)
+        btnLog.setToolTip('Logaritmo do Valor na base B')
+        layoutBtnOper.addWidget(btnLog, 1, 0)
 
         btnLog2 = QPushButton('log2(v)')
         btnLog2.clicked.connect(log2)
-        btnLog2.setToolTip('Logaritmo de V na base 2')
-        layoutBtn.addWidget(btnLog2, 2, 1)
+        btnLog2.setToolTip('Logaritmo do Valor na base 2')
+        layoutBtnOper.addWidget(btnLog2, 1, 1)
 
         btnLog10 = QPushButton('log10(v)')
         btnLog10.clicked.connect(log10)
-        btnLog10.setToolTip('Logaritmo de V na base 10')
-        layoutBtn.addWidget(btnLog10, 2, 2)
+        btnLog10.setToolTip('Logaritmo do Valor na base 10')
+        layoutBtnOper.addWidget(btnLog10, 1, 2)
 
         btnLogN = QPushButton('logN(v)')
         btnLogN.clicked.connect(logN)
-        btnLogN.setToolTip('Logaritmo Natural de V')
-        layoutBtn.addWidget(btnLogN, 2, 3)
+        btnLogN.setToolTip('Logaritmo Natural do Valor')
+        layoutBtnOper.addWidget(btnLogN, 1, 3)
 
-        # ***** 4 linha *****
         btnSeno = QPushButton('Seno(v)')
         btnSeno.clicked.connect(seno)
-        btnSeno.setToolTip('Seno de V em Radianos')
-        layoutBtn.addWidget(btnSeno, 3, 0, 1, 2)
+        btnSeno.setToolTip('Seno do Valor em Radianos')
+        layoutBtnOper.addWidget(btnSeno, 1, 4)
 
         btnCos = QPushButton('Cos(v)')
         btnCos.clicked.connect(cos)
-        btnCos.setToolTip('Coseno de V em Radianos')
-        layoutBtn.addWidget(btnCos, 3, 2, 1, 2)
+        btnCos.setToolTip('Coseno do Valor em Radianos')
+        layoutBtnOper.addWidget(btnCos, 1, 5)
 
-        # ***** 5 linha *****
         btnTan = QPushButton('Tan(v)')
         btnTan.clicked.connect(tan)
-        btnTan.setToolTip('Tangente de V em Radianos')
-        layoutBtn.addWidget(btnTan, 5, 0, 1, 2)
+        btnTan.setToolTip('Tangente do Valor em Radianos')
+        layoutBtnOper.addWidget(btnTan, 1, 6)
 
         btnATan = QPushButton('ArcTan(v)')
         btnATan.clicked.connect(atan)
-        btnATan.setToolTip('Arco Tangente de V em Radianos')
-        layoutBtn.addWidget(btnATan, 5, 2, 1, 2)
-        layoutOperacoes.addRow(layoutBtn)
+        btnATan.setToolTip('Arco Tangente do Valor em Radianos')
+        layoutBtnOper.addWidget(btnATan, 1, 7)
 
-        btnClr = QPushButton('C')
+        # ***** separador *****
+        layoutBtnOper.addWidget(QLabel('<hr>'), 2, 0, 1, 8)
+
+        # ***** 3 linha *****
+        btn9 = QPushButton('9')
+        layoutBtnOper.addWidget(btn9, 3, 0, 1, 2)
+
+        btn8 = QPushButton('8')
+        layoutBtnOper.addWidget(btn8, 3, 2, 1, 2)
+
+        btn7 = QPushButton('7')
+        layoutBtnOper.addWidget(btn7, 3, 4, 1, 2)
+
+        btn6 = QPushButton('6')
+        layoutBtnOper.addWidget(btn6, 3, 6, 1, 2)
+
+        # ***** 4 linha *****
+        btn5 = QPushButton('5')
+        layoutBtnOper.addWidget(btn5, 4, 0, 1, 2)
+
+        btn4 = QPushButton('4')
+        layoutBtnOper.addWidget(btn4, 4, 2, 1, 2)
+
+        btn3 = QPushButton('3')
+        layoutBtnOper.addWidget(btn3, 4, 4, 1, 2)
+
+        btn2 = QPushButton('2')
+        layoutBtnOper.addWidget(btn2, 4, 6, 1, 2)
+
+        # ***** 5 linha *****
+        btn1 = QPushButton('1')
+        layoutBtnOper.addWidget(btn1, 5, 0, 1, 4)
+
+        btn0 = QPushButton('0')
+        layoutBtnOper.addWidget(btn0, 5, 4, 1, 4)
+        layoutOperacoes.addRow(layoutBtnOper)
+
+        btnClr = QPushButton('AC')
         btnClr.clicked.connect(apagar)
         btnClr.setToolTip('Apagar Valores e Resultado')
         layoutOperacoes.addRow(btnClr)
