@@ -36,24 +36,23 @@ class Gcal:
             load += randint(1, 10)
             sleep(0.5)
         self.janela.close()
-        GCal().ferramentas.setStyleSheet(tema)
         GCal().ferramentas.show()
 
 
 if __name__ == '__main__':
     inifile = ConfigParser()
-    if os.path.exists('gcalculadora.ini'):
+    if os.path.exists('./gcalculadora.ini'):
         inifile.read('gcalculadora.ini')
         if inifile['MAIN']['tema'] == 'Escuro':
-            tema = open('themes/gcalculadora.qss').read().strip()
+            tema = open('themes/dark.qss').read().strip()
         else:
-            tema = open('themes/gcalculadora-light.qss').read().strip()
+            tema = open('themes/light.qss').read().strip()
     else:
-        inifile['MAIN'] = {'tema': 'Claro', 'imagem': 'img/2.png'}
         with open('gcalculadora.ini', 'w') as INIFILE:
+            inifile['MAIN'] = {'tema': 'Claro', 'imagem': 'img/1.png'}
             inifile.write(INIFILE)
-        tema = open('themes/gcalculadora-light.qss').read().strip()
-    fonte = "fonts/AdventPro-Bold.ttf"
+        tema = open('themes/light.qss').read().strip()
+    fonte = "fonts/AdventPro-Regular.ttf"
 
     app = Gcal()
     app.gc.exec()
