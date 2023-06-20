@@ -319,5 +319,4 @@ fabric.properties
 .idea/
 
 ## User Template
-
-*.ini
+*.DS_Store
