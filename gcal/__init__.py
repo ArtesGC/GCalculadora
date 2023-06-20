@@ -2,16 +2,15 @@
 (c) 2019-2021 Nurul-GC
 """
 
-from configparser import ConfigParser
 import os
-import webbrowser
+from configparser import ConfigParser
 from random import randint
-from sys import argv, exit
+from sys import argv
 from time import sleep
 
-from PyQt6.QtWidgets import *
-from PyQt6.QtGui import *
 from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 
 from gcal.gui import GCal
 

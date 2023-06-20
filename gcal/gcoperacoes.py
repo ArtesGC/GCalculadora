@@ -4,63 +4,50 @@
 from math import *
 
 
+def isempty(_str: str) -> bool:
+    if _str.isspace() or len(_str) == 0:
+        return True
+    return False
+
+
 class Operacoes:
-    def __init__(self):
-        self.valor1 = 0
-        self.valor2 = 0
+    def __init__(self, valor1=0, valor2=0):
+        self.valor1 = valor1
+        self.valor2 = valor2
 
     def soma(self):
-        if self.valor1 == 0 and self.valor2 == 0:
-            return None
-        return self.valor1+self.valor2
+        return self.valor1 + self.valor2
 
     def subtracao(self):
-        if self.valor1 == 0 and self.valor2 == 0:
-            return None
-        return self.valor1-self.valor2
+        return self.valor1 - self.valor2
 
     def multiplicacao(self):
-        if self.valor1 == 0 and self.valor2 == 0:
-            return None
-        return self.valor1*self.valor2
+        return self.valor1 * self.valor2
 
     def divisao(self):
         if self.valor1 == 0 and self.valor2 == 0:
             return None
         try:
-            return self.valor1/self.valor2
+            return self.valor1 / self.valor2
         except ZeroDivisionError:
             return None
 
     def expoente(self):
-        if self.valor1 == 0:
-            return exp(self.valor2)
-        elif self.valor2 == 0:
-            return exp(self.valor1)
-        else:
-            if (self.valor1 and self.valor2) == 0:
-                return None
-            return exp(self.soma())
+        return pow(self.valor1, self.valor2)
 
-    def expoenteNeg(self):
-        if self.valor1 == 0:
-            return expm1(self.valor2)
-        elif self.valor2 == 0:
-            return expm1(self.valor1)
-        elif (self.valor1 and self.valor2) == 0:
-            return None
-        else:
-            return expm1(self.soma())
+    def expoente_neg(self):
+        if self.valor1 and not self.valor2:
+            return pow(self.valor1, -1)
+        elif self.valor2 and not self.valor1:
+            return pow(self.valor2, -1)
+        return pow(self.soma(), -1)
 
-    def raizQuad(self):
-        if self.valor1 == 0:
-            return sqrt(self.valor2)
-        elif self.valor2 == 0:
+    def raiz_quad(self):
+        if self.valor1 and not self.valor2:
             return sqrt(self.valor1)
-        elif (self.valor1 and self.valor2) == 0:
-            return None
-        else:
-            return sqrt(self.soma())
+        if self.valor2 and not self.valor1:
+            return sqrt(self.valor2)
+        return sqrt(self.soma())
 
     def modulo(self):
         if (self.valor1 and self.valor2) == 0:
@@ -97,7 +84,7 @@ class Operacoes:
         else:
             return log10(self.soma())
 
-    def logaritmoNat(self):
+    def logaritmo_nat(self):
         if self.valor1 == 0:
             return log1p(self.valor2)
         elif self.valor2 == 0:
@@ -137,7 +124,7 @@ class Operacoes:
         else:
             return tan(self.soma())
 
-    def arcTangente(self):
+    def arc_tangente(self):
         if self.valor1 == 0:
             return atan(self.valor2)
         elif self.valor2 == 0:

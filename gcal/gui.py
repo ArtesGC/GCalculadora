@@ -1,13 +1,12 @@
 import webbrowser
 from configparser import ConfigParser
-from sys import argv, exit
-from time import sleep
+from sys import exit
 
-from PyQt6.QtWidgets import *
-from PyQt6.QtGui import *
 from PyQt6.QtCore import *
+from PyQt6.QtGui import *
+from PyQt6.QtWidgets import *
 
-from gcoperacoes import Operacoes
+from gcoperacoes import Operacoes, isempty
 
 inifile = ConfigParser()
 inifile.read('gcalculadora.ini')
@@ -22,7 +21,6 @@ class GCal:
         self.gcOperacoes = Operacoes()
 
         self.ferramentas = QWidget()
-        self.ferramentas.setFixedSize(600, 600)
         self.ferramentas.setWindowTitle('GCalculadora')
         self.ferramentas.setStyleSheet(tema)
         self.ferramentas.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
@@ -30,7 +28,7 @@ class GCal:
         menu = QMenuBar(self.ferramentas)
         opcoes = menu.addMenu('Opções')
         alterartema = opcoes.addAction(QIcon('img/icons/paint.png'), 'Alterar Tema')
-        alterartema.triggered.connect(self.alterarTema)
+        alterartema.triggered.connect(self.alterar_tema)
         instrucoes = opcoes.addAction(QIcon('img/icons/info.png'), 'Instruções')
         instrucoes.triggered.connect(self._instrucoes)
         opcoes.addSeparator()
@@ -44,43 +42,49 @@ class GCal:
         self.tab.setGeometry(0, 30, 600, 580)
         self.tab.setDocumentMode(True)
 
-        self.janelaInicial()
+        self.janela_inicial()
 
-    def alterarTema(self):
+    def alterar_tema(self):
         def alterar():
             try:
                 config = ConfigParser()
-                if escolhaTema.currentText() == 'Escuro':
-                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/2.png'}
-                elif escolhaTema.currentText() == 'Claro':
-                    config['MAIN'] = {'tema': escolhaTema.currentText(), 'imagem': 'img/1.png'}
+                if escolha_tema.currentText() == 'Escuro':
+                    config['MAIN'] = {'tema': escolha_tema.currentText(), 'imagem': 'img/2.png'}
+                elif escolha_tema.currentText() == 'Claro':
+                    config['MAIN'] = {'tema': escolha_tema.currentText(), 'imagem': 'img/1.png'}
                 with open('gcalculadora.ini', 'w') as INIFILE:
                     config.write(INIFILE)
-                QMessageBox.information(self.ferramentas, 'Sucessso', 'O tema definido sera aplicado após o reinicio do programa!')
-                janelaConfiguracoes.close()
+                QMessageBox.information(
+                    self.ferramentas, 'Sucessso',
+                    'O tema definido sera aplicado após o reinicio do programa!'
+                )
+                janela_configuracoes.close()
             except Exception as erro:
-                QMessageBox.warning(self.ferramentas, 'Aviso', f'Durante o processamento do pedido o seguinte erro foi encontrado:\n- {erro}')
+                QMessageBox.warning(
+                    self.ferramentas, 'Aviso',
+                    f'Durante o processamento do pedido o seguinte erro foi encontrado:\n- {erro}'
+                )
 
-        janelaConfiguracoes = QDialog(self.ferramentas)
-        janelaConfiguracoes.setWindowTitle('GCalculadora - Tema')
-        janelaConfiguracoes.setFixedSize(QSize(300, 150))
-        janelaConfiguracoes.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
-        layoutConfiguracoes = QVBoxLayout()
+        janela_configuracoes = QDialog(self.ferramentas)
+        janela_configuracoes.setWindowTitle('GCalculadora - Tema')
+        janela_configuracoes.setFixedSize(QSize(300, 150))
+        janela_configuracoes.setWindowIcon(QIcon('img/favicons/favicon-32x32.png'))
+        layout_configuracoes = QVBoxLayout()
 
-        labelInfo = QLabel('<h3>Escolha o tema para o programa:</h3>')
-        layoutConfiguracoes.addWidget(labelInfo)
+        label_info = QLabel('<h3>Escolha o tema para o programa:</h3>')
+        layout_configuracoes.addWidget(label_info)
 
         temas = ['Claro', 'Escuro']
-        escolhaTema = QComboBox()
-        escolhaTema.addItems(temas)
-        layoutConfiguracoes.addWidget(escolhaTema)
+        escolha_tema = QComboBox()
+        escolha_tema.addItems(temas)
+        layout_configuracoes.addWidget(escolha_tema)
 
-        btnSalvar = QPushButton('Salvar')
-        btnSalvar.clicked.connect(alterar)
-        layoutConfiguracoes.addWidget(btnSalvar)
+        btn_salvar = QPushButton('Salvar')
+        btn_salvar.clicked.connect(alterar)
+        layout_configuracoes.addWidget(btn_salvar)
 
-        janelaConfiguracoes.setLayout(layoutConfiguracoes)
-        janelaConfiguracoes.show()
+        janela_configuracoes.setLayout(layout_configuracoes)
+        janela_configuracoes.show()
 
     def _instrucoes(self):
         QMessageBox.information(self.ferramentas, 'Instruções', '''
@@ -101,7 +105,8 @@ Basta deixar o outro valor com 0..</p>
 <b>&trade;ArtesGC Inc</b></p>
 ''')
 
-    def _sair(self):
+    @staticmethod
+    def _sair():
         return exit(0)
 
     def _sobre(self):
@@ -114,209 +119,145 @@ Designer e Programador: <b>Nurul-GC</b><br>
 Empresa: <b>ArtesGC Inc.</b></p>
 ''')
 
-    def janelaInicial(self):
+    def janela_inicial(self):
         frame = QFrame()
         layout = QFormLayout()
         layout.setSpacing(10)
 
-        labelInfo = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Prática da Atualidade</i></h2>')
-        labelInfo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addRow(labelInfo)
+        label_info = QLabel('<h2>Bem Vindo a calculadora<br><i>Mais Simples e Prática da Atualidade</i></h2>')
+        label_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addRow(label_info)
 
-        labelImagem = QLabel()
-        labelImagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])).scaled(500, 440))
-        labelImagem.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addRow(labelImagem)
+        label_imagem = QLabel()
+        label_imagem.setPixmap(QPixmap(str(inifile['MAIN']['imagem'])).scaled(500, 440))
+        label_imagem.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addRow(label_imagem)
 
         def iniciar():
             self.tab.removeTab(self.tab.currentIndex())
-            self.janelaOperacional()
+            self.janela_operacional()
 
-        iniciarBtn = QPushButton('Iniciar')
-        iniciarBtn.clicked.connect(iniciar)
-        layout.addRow(iniciarBtn)
+        iniciar_btn = QPushButton('Iniciar')
+        iniciar_btn.clicked.connect(iniciar)
+        layout.addRow(iniciar_btn)
         layout.addRow(QLabel("<hr>"))
 
-        link = lambda: webbrowser.open('https://artesgc.home.blog')
-        labelTrade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
-        labelTrade.setAlignment(Qt.AlignmentFlag.AlignRight)
-        labelTrade.linkActivated.connect(link)
-        labelTrade.setToolTip('Abrir website oficial da ArtesGC!')
-        layout.addWidget(labelTrade)
+        def link(): webbrowser.open('https://artesgc.home.blog')
+        label_trade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
+        label_trade.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label_trade.linkActivated.connect(link)
+        label_trade.setToolTip('Abrir website oficial da ArtesGC!')
+        layout.addRow(label_trade)
 
         frame.setLayout(layout)
         self.tab.addTab(frame, 'Principal')
         self.tab.setCurrentWidget(frame)
 
-    def janelaOperacional(self):
+    def janela_operacional(self):
         def apagar():
             valor1.clear()
             valor2.clear()
             resultado.clear()
 
         def soma():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.soma()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.soma()))
 
         def subt():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.subtracao()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.subtracao()))
 
         def mult():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.multiplicacao()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.multiplicacao()))
 
         def divi():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.divisao()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.divisao()))
 
         def exp():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.expoente()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.expoente()))
 
-        def expN():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.expoenteNeg()))
+        def exp_n():
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.expoente_neg()))
 
-        def razQ():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.raizQuad()))
+        def raz_q():
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.raiz_quad()))
 
         def mod():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.modulo()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.modulo()))
 
-        def logB():
+        def log_b():
             def calcular():
-                if not valor1.text() or not valor2.text():
-                    QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-                else:
-                    self.gcOperacoes.valor1 = int(valor1.text())
-                    self.gcOperacoes.valor2 = int(valor2.text())
-                    base = int(valorBase.currentText())
-                    resultado.setText(str(self.gcOperacoes.logaritmo(base)))
-                    janelaLog.close()
+                setvalores()
+                base = int(valor_base.currentText())
+                resultado.setText(str(self.gcOperacoes.logaritmo(base)))
+                janela_log.close()
 
-            janelaLog = QDialog(self.ferramentas)
-            layoutJ = QVBoxLayout()
+            janela_log = QDialog(self.ferramentas)
+            layout_j = QVBoxLayout()
 
-            labelInfo = QLabel('<h3>Escolha o Valor da base:</h3>')
-            layoutJ.addWidget(labelInfo)
+            label_info = QLabel('<h3>Escolha o Valor da base:</h3>')
+            layout_j.addWidget(label_info)
 
             valores = ['1', '3', '4', '5', '6', '7', '8', '9']
-            valorBase = QComboBox()
-            valorBase.addItems(valores)
-            layoutJ.addWidget(valorBase)
+            valor_base = QComboBox()
+            valor_base.addItems(valores)
+            layout_j.addWidget(valor_base)
 
-            btnSalvar = QPushButton('Salvar')
-            btnSalvar.clicked.connect(calcular)
-            layoutJ.addWidget(btnSalvar)
+            btn_salvar = QPushButton('Salvar')
+            btn_salvar.clicked.connect(calcular)
+            layout_j.addWidget(btn_salvar)
 
-            janelaLog.setLayout(layoutJ)
-            janelaLog.show()
+            janela_log.setLayout(layout_j)
+            janela_log.show()
 
         def log2():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmo2()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.logaritmo2()))
 
         def log10():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmo10()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.logaritmo10()))
 
-        def logN():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.logaritmoNat()))
+        def log_n():
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.logaritmo_nat()))
 
         def seno():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.seno()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.seno()))
 
         def cos():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.coseno()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.coseno()))
 
         def tan():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
-            else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.tangente()))
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.tangente()))
 
         def atan():
-            if not valor1.text() or not valor2.text():
-                QMessageBox.warning(self.ferramentas, 'Aviso', '<b>Não foi possivel processar a operação com os valores não preenchidos!</b>')
+            setvalores()
+            resultado.setText(str(self.gcOperacoes.arc_tangente()))
+
+        def setvalores():
+            if isempty(valor1.text()):
+                Operacoes(valor2=int(valor2.text()))
+            elif isempty(valor2.text()):
+                Operacoes(valor1=int(valor1.text()))
             else:
-                self.gcOperacoes.valor1 = int(valor1.text())
-                self.gcOperacoes.valor2 = int(valor2.text())
-                resultado.setText(str(self.gcOperacoes.arcTangente()))
+                Operacoes(valor1=int(valor1.text()), valor2=int(valor2.text()))
 
-        def selctvalor1():
-            selectvalor1.setChecked(True)
-            valor1.setFocus(Qt.FocusReason.MouseFocusReason)
+        frame_operacoes = QFrame()
+        layout_operacoes = QFormLayout()
+        layout_operacoes.setSpacing(10)
 
-        def selctvalor2():
-            selectvalor2.setChecked(True)
-            valor2.setFocus(Qt.FocusReason.MouseFocusReason)
-
-        frameOperacoes = QFrame()
-        layoutOperacoes = QFormLayout()
-        layoutOperacoes.setSpacing(10)
-
-        layoutBtnOper = QGridLayout()
-        layoutValores = QHBoxLayout()
+        layout_btn_oper = QGridLayout()
+        layout_valores = QHBoxLayout()
 
         layoutvalor1 = QFormLayout()
         valor1 = QLineEdit()
@@ -324,12 +265,8 @@ Empresa: <b>ArtesGC Inc.</b></p>
         valor1.setFont(QFont("Courier", 10))
         valor1.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor1.setPlaceholderText('Digite o 1º valor..')
-        valor1.textEdited.connect(selctvalor1)
-
-        selectvalor1 = QRadioButton()
-        selectvalor1.clicked.connect(selctvalor1)
-        layoutvalor1.addRow(selectvalor1, valor1)
-        layoutValores.addLayout(layoutvalor1)
+        layoutvalor1.addRow(valor1)
+        layout_valores.addLayout(layoutvalor1)
 
         layoutvalor2 = QFormLayout()
         valor2 = QLineEdit()
@@ -337,158 +274,118 @@ Empresa: <b>ArtesGC Inc.</b></p>
         valor2.setFont(QFont("Courier", 10))
         valor2.setAlignment(Qt.AlignmentFlag.AlignCenter)
         valor2.setPlaceholderText('Digite o 2º valor..')
-        valor2.textEdited.connect(selctvalor2)
-
-        selectvalor2 = QRadioButton()
-        selectvalor2.clicked.connect(selctvalor2)
-        layoutvalor2.addRow(selectvalor2, valor2)
-        layoutValores.addLayout(layoutvalor2)
-        layoutOperacoes.addRow(layoutValores)
+        layoutvalor2.addRow(valor2)
+        layout_valores.addLayout(layoutvalor2)
+        layout_operacoes.addRow(layout_valores)
 
         resultado = QLineEdit()
         resultado.setReadOnly(True)
         resultado.setFont(QFont("Courier", 20))
         resultado.setPlaceholderText('Resultado da operaçao..')
         resultado.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layoutOperacoes.addRow(resultado)
+        layout_operacoes.addRow(resultado)
 
         # ***** separador *****
-        layoutOperacoes.addRow(QLabel('<hr>'))
+        layout_operacoes.addRow(QLabel('<hr>'))
 
         # ***** 1 linha *****
-        btnSoma = QPushButton('+')
-        btnSoma.clicked.connect(soma)
-        btnSoma.setToolTip('Soma')
-        layoutBtnOper.addWidget(btnSoma, 0, 0)
+        btn_soma = QPushButton('+')
+        btn_soma.clicked.connect(soma)
+        btn_soma.setToolTip('Soma')
+        layout_btn_oper.addWidget(btn_soma, 0, 0)
 
-        btnSubt = QPushButton('-')
-        btnSubt.clicked.connect(subt)
-        btnSubt.setToolTip('Subtração')
-        layoutBtnOper.addWidget(btnSubt, 0, 1)
+        btn_subt = QPushButton('-')
+        btn_subt.clicked.connect(subt)
+        btn_subt.setToolTip('Subtração')
+        layout_btn_oper.addWidget(btn_subt, 0, 1)
 
-        btnMult = QPushButton('x')
-        btnMult.clicked.connect(mult)
-        btnMult.setToolTip('Multiplicação')
-        layoutBtnOper.addWidget(btnMult, 0, 2)
+        btn_mult = QPushButton('x')
+        btn_mult.clicked.connect(mult)
+        btn_mult.setToolTip('Multiplicação')
+        layout_btn_oper.addWidget(btn_mult, 0, 2)
 
-        btnDivi = QPushButton('/')
-        btnDivi.clicked.connect(divi)
-        btnDivi.setToolTip('Divisão')
-        layoutBtnOper.addWidget(btnDivi, 0, 3)
+        btn_divi = QPushButton('/')
+        btn_divi.clicked.connect(divi)
+        btn_divi.setToolTip('Divisão')
+        layout_btn_oper.addWidget(btn_divi, 0, 3)
 
-        btnExp = QPushButton('^')
-        btnExp.clicked.connect(exp)
-        btnExp.setToolTip('Exponenciação')
-        layoutBtnOper.addWidget(btnExp, 0, 4)
+        btn_exp = QPushButton('^')
+        btn_exp.clicked.connect(exp)
+        btn_exp.setToolTip('Exponenciação: 1-valor elevado ao 2-valor')
+        layout_btn_oper.addWidget(btn_exp, 1, 0)
 
-        btnExpN = QPushButton('^-1')
-        btnExpN.clicked.connect(expN)
-        btnExpN.setToolTip('Exponenciação Negativa')
-        layoutBtnOper.addWidget(btnExpN, 0, 5)
+        btn_exp_n = QPushButton('^-1')
+        btn_exp_n.clicked.connect(exp_n)
+        btn_exp_n.setToolTip('Exponenciação Negativa da soma dos valores')
+        layout_btn_oper.addWidget(btn_exp_n, 1, 1)
 
-        btnRazQ = QPushButton('√')
-        btnRazQ.clicked.connect(razQ)
-        btnRazQ.setToolTip('Raiz Quadrada')
-        layoutBtnOper.addWidget(btnRazQ, 0, 6)
+        btn_raz_q = QPushButton('√')
+        btn_raz_q.clicked.connect(raz_q)
+        btn_raz_q.setToolTip('Raiz Quadrada')
+        layout_btn_oper.addWidget(btn_raz_q, 1, 2)
 
-        btnMod = QPushButton('%')
-        btnMod.clicked.connect(mod)
-        btnMod.setToolTip('Môdulo')
-        layoutBtnOper.addWidget(btnMod, 0, 7)
+        btn_mod = QPushButton('%')
+        btn_mod.clicked.connect(mod)
+        btn_mod.setToolTip('Môdulo')
+        layout_btn_oper.addWidget(btn_mod, 1, 3)
 
         # ***** 2 linha *****
-        btnLog = QPushButton('logB(v)')
-        btnLog.clicked.connect(logB)
-        btnLog.setToolTip('Logaritmo do Valor na base B')
-        layoutBtnOper.addWidget(btnLog, 1, 0)
+        btn_log = QPushButton('logB(v)')
+        btn_log.clicked.connect(log_b)
+        btn_log.setToolTip('Logaritmo do Valor na base B')
+        layout_btn_oper.addWidget(btn_log, 2, 0)
 
-        btnLog2 = QPushButton('log2(v)')
-        btnLog2.clicked.connect(log2)
-        btnLog2.setToolTip('Logaritmo do Valor na base 2')
-        layoutBtnOper.addWidget(btnLog2, 1, 1)
+        btn_log2 = QPushButton('log2(v)')
+        btn_log2.clicked.connect(log2)
+        btn_log2.setToolTip('Logaritmo do Valor na base 2')
+        layout_btn_oper.addWidget(btn_log2, 2, 1)
 
-        btnLog10 = QPushButton('log10(v)')
-        btnLog10.clicked.connect(log10)
-        btnLog10.setToolTip('Logaritmo do Valor na base 10')
-        layoutBtnOper.addWidget(btnLog10, 1, 2)
+        btn_log10 = QPushButton('log10(v)')
+        btn_log10.clicked.connect(log10)
+        btn_log10.setToolTip('Logaritmo do Valor na base 10')
+        layout_btn_oper.addWidget(btn_log10, 2, 2)
 
-        btnLogN = QPushButton('logN(v)')
-        btnLogN.clicked.connect(logN)
-        btnLogN.setToolTip('Logaritmo Natural do Valor')
-        layoutBtnOper.addWidget(btnLogN, 1, 3)
+        btn_log_n = QPushButton('logN(v)')
+        btn_log_n.clicked.connect(log_n)
+        btn_log_n.setToolTip('Logaritmo Natural do Valor')
+        layout_btn_oper.addWidget(btn_log_n, 2, 3)
 
-        btnSeno = QPushButton('Seno(v)')
-        btnSeno.clicked.connect(seno)
-        btnSeno.setToolTip('Seno do Valor em Radianos')
-        layoutBtnOper.addWidget(btnSeno, 1, 4)
+        btn_seno = QPushButton('Seno(v)')
+        btn_seno.clicked.connect(seno)
+        btn_seno.setToolTip('Seno do Valor em Radianos')
+        layout_btn_oper.addWidget(btn_seno, 3, 0)
 
-        btnCos = QPushButton('Cos(v)')
-        btnCos.clicked.connect(cos)
-        btnCos.setToolTip('Coseno do Valor em Radianos')
-        layoutBtnOper.addWidget(btnCos, 1, 5)
+        btn_cos = QPushButton('Cos(v)')
+        btn_cos.clicked.connect(cos)
+        btn_cos.setToolTip('Coseno do Valor em Radianos')
+        layout_btn_oper.addWidget(btn_cos, 3, 1)
 
-        btnTan = QPushButton('Tan(v)')
-        btnTan.clicked.connect(tan)
-        btnTan.setToolTip('Tangente do Valor em Radianos')
-        layoutBtnOper.addWidget(btnTan, 1, 6)
+        btn_tan = QPushButton('Tan(v)')
+        btn_tan.clicked.connect(tan)
+        btn_tan.setToolTip('Tangente do Valor em Radianos')
+        layout_btn_oper.addWidget(btn_tan, 3, 2)
 
-        btnATan = QPushButton('ArcTan(v)')
-        btnATan.clicked.connect(atan)
-        btnATan.setToolTip('Arco Tangente do Valor em Radianos')
-        layoutBtnOper.addWidget(btnATan, 1, 7)
+        btn_a_tan = QPushButton('ArcTan(v)')
+        btn_a_tan.clicked.connect(atan)
+        btn_a_tan.setToolTip('Arco Tangente do Valor em Radianos')
+        layout_btn_oper.addWidget(btn_a_tan, 3, 3)
+        layout_operacoes.addRow(layout_btn_oper)
 
-        # ***** separador *****
-        layoutBtnOper.addWidget(QLabel('<hr>'), 2, 0, 1, 8)
-
-        # ***** 3 linha *****
-        btn9 = QPushButton('9')
-        layoutBtnOper.addWidget(btn9, 3, 0, 1, 2)
-
-        btn8 = QPushButton('8')
-        layoutBtnOper.addWidget(btn8, 3, 2, 1, 2)
-
-        btn7 = QPushButton('7')
-        layoutBtnOper.addWidget(btn7, 3, 4, 1, 2)
-
-        btn6 = QPushButton('6')
-        layoutBtnOper.addWidget(btn6, 3, 6, 1, 2)
-
-        # ***** 4 linha *****
-        btn5 = QPushButton('5')
-        layoutBtnOper.addWidget(btn5, 4, 0, 1, 2)
-
-        btn4 = QPushButton('4')
-        layoutBtnOper.addWidget(btn4, 4, 2, 1, 2)
-
-        btn3 = QPushButton('3')
-        layoutBtnOper.addWidget(btn3, 4, 4, 1, 2)
-
-        btn2 = QPushButton('2')
-        layoutBtnOper.addWidget(btn2, 4, 6, 1, 2)
-
-        # ***** 5 linha *****
-        btn1 = QPushButton('1')
-        layoutBtnOper.addWidget(btn1, 5, 0, 1, 4)
-
-        btn0 = QPushButton('0')
-        layoutBtnOper.addWidget(btn0, 5, 4, 1, 4)
-        layoutOperacoes.addRow(layoutBtnOper)
-
-        btnClr = QPushButton('AC')
-        btnClr.clicked.connect(apagar)
-        btnClr.setToolTip('Apagar Valores e Resultado')
-        layoutOperacoes.addRow(btnClr)
+        btn_clr = QPushButton('AC')
+        btn_clr.clicked.connect(apagar)
+        btn_clr.setToolTip('Apagar Valores e Resultado')
+        layout_operacoes.addRow(btn_clr)
 
         # ***** separador *****
-        layoutOperacoes.addRow(QLabel('<hr>'))
+        layout_operacoes.addRow(QLabel('<hr>'))
 
-        link = lambda: webbrowser.open('https://artesgc.home.blog')
-        labelTrade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
-        labelTrade.setAlignment(Qt.AlignmentFlag.AlignRight)
-        labelTrade.linkActivated.connect(link)
-        labelTrade.setToolTip('Abrir website oficial da ArtesGC!')
-        layoutOperacoes.addWidget(labelTrade)
+        def link(): webbrowser.open('https://artesgc.home.blog')
+        label_trade = QLabel('<b><a href="#" style="text-decoration:none;">&trade;ArtesGC Inc</a></b>')
+        label_trade.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label_trade.linkActivated.connect(link)
+        label_trade.setToolTip('Abrir website oficial da ArtesGC!')
+        layout_operacoes.addRow(label_trade)
 
-        frameOperacoes.setLayout(layoutOperacoes)
-        self.tab.addTab(frameOperacoes, 'Operações')
-        self.tab.setCurrentWidget(frameOperacoes)
+        frame_operacoes.setLayout(layout_operacoes)
+        self.tab.addTab(frame_operacoes, 'Operações')
+        self.tab.setCurrentWidget(frame_operacoes)
