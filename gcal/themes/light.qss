@@ -1,5 +1,5 @@
 QDialog, QWidget, QFrame{
-  font-family: "AdventPro";
+  font-family: "AdventPro-Regular";
   font-weight: bold;
   background-color: "#A00";
 }
@@ -37,21 +37,6 @@ QPushButton:hover{
   padding: 10px;
   color: black;
   background-color: white;
-}
-QProgressBar{
-  text-align: center;
-  border-style: solid;
-  border-width: 1px;
-  border-color: black;
-  border-radius: 3px;
-  padding: 6px;
-  color: "#A00";
-  background-color: black;
-}
-QProgressBar::chunk{
-  background-color: white;
-  border-radius: 3px;
-  padding: 6px;
 }
 QMenuBar::item:selected {
   border-radius: 3px;
